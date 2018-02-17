@@ -53,26 +53,12 @@ objects:
         --registration-token $REGISTRATION_TOKEN \
         --name "k8s_runner" \
         --executor kubernetes
-      # Add extra config  
-      cat  /scripts/extraconfig.yaml >> /etc/gitlab-runner/config.toml  
       # Start the runner
       /entrypoint run --user=gitlab-runner \
         --working-directory=/home/gitlab-runner
     config.toml: |
       concurrent = 10
       check_interval = 10
-    extraconfig.yaml: |2-
-          [[runners.kubernetes.volumes.host_path]]
-            name = "docker-socket"
-            mount_path = "/var/run/docker.sock"
-            read_only = false
-            host_path = "/var/run/docker.sock"
-          [[runners.kubernetes.volumes.secret]]
-            name = "secrets"
-            mount_path = "/tmp"
-            read_only = true
-            [runners.kubernetes.volumes.secret.items]
-              "hub" = "hubsecret"
 - kind: ServiceAccount
   apiVersion: v1
   metadata:
